@@ -46,3 +46,16 @@ Where p.estado=0 and po.operacion=0  and po.FechaOperacion between '2021-06-01' 
 and p.tipopasaje not in (4,5,8,3)
 
 group by b.nombre,u.nombre,lo.nombre,ld.nombre, YEAR(po.fechaoperacion),month(po.fechaoperacion) order by sum(p.importefinal) desc
+
+
+-- consulta
+select u.nombre AS Usuario ,b.nombre as Agencia,pt.Nombre AS TipoTicket,P.numero, lo.nombre as Origen,ld.nombre as Destino,YEAR(po.fechaoperacion) as AñoOperacion,month(po.fechaoperacion) as Mesoperacion,
+p.importebase as TarifaPlena
+,p.importedescuentos as DescuentosAplicados,
+p.importefinal as ImporteFinal FROM pasajesoperaciones po inner join pasajes p on po.pasaje=p.id
+inner join boleterias b on po.boleteria=b.id inner join usuarios u on po.usuario=u.id
+inner join g_Localidades lo on p.localidadorigen=lo.localidadid
+inner join g_localidades ld on p.localidaddestino=ld.localidadid
+inner join PasajesTipos pt on p.TipoPasaje=pt.id
+Where p.estado=0 and po.operacion=0  and po.FechaOperacion between '2021-07-01' and '2021-07-31 23:59'
+and p.tipopasaje not in (4,5,8,3)
