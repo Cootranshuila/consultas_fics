@@ -34,3 +34,15 @@ WHERE CajasUsuarios.Usuario = Usuarios.Id AND Boleterias.Id = CajasUsuarios.Bole
 SELECT TOP (1000) Numero,ImporteFinal,Pasajes.Estado,ViajeFechaTope,Persona,Viajo, PasajesTipos.Nombre AS Tipo_venta, CONCAT(Personas.Nombres,' ',Personas.Apellido) AS Pasajero
 FROM Pasajes, PasajesTipos, Personas
 WHERE Pasajes.TipoPasaje = PasajesTipos.Id AND Personas.Id = Pasajes.Persona
+
+-- Consulta Cantidad de ventas con descuento por cada taquillero
+select u.nombre,b.nombre, lo.nombre as Origen,ld.nombre as destino,YEAR(po.fechaoperacion) as AñoOperacion,month(po.fechaoperacion) as Mesoperacion, sum(p.importebase) as TarifaPlena
+,sum(p.importedescuentos) as DescuentosAplicados,
+sum(p.importefinal) as ImporteFinal, count(p.id) as CantidadTickets from pasajesoperaciones po inner join pasajes p on po.pasaje=p.id
+inner join boleterias b on po.boleteria=b.id inner join usuarios u on po.usuario=u.id
+inner join g_Localidades lo on p.localidadorigen=lo.localidadid
+inner join g_localidades ld on p.localidaddestino=ld.localidadid
+Where p.estado=0 and po.operacion=0  and po.FechaOperacion between '2021-06-01' and '2021-06-30 23:59'
+and p.tipopasaje not in (4,5,8,3)
+
+group by b.nombre,u.nombre,lo.nombre,ld.nombre, YEAR(po.fechaoperacion),month(po.fechaoperacion) order by sum(p.importefinal) desc
