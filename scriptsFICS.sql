@@ -123,3 +123,15 @@ inner join PasajesTipos pt on p.TipoPasaje=pt.id
 Where p.estado=0 and po.operacion=0  and po.FechaOperacion between '2021-07-01' and '2021-07-31 23:59'
 and p.tipopasaje not in (4,5,8,3)
 group by b.nombre,u.nombre, YEAR(po.fechaoperacion),month(po.fechaoperacion) order by sum(p.importefinal) desc
+
+-- consulta ventas totales por categorias
+select ca.Nombre, YEAR(po.fechaoperacion) as AñoOperacion, month(po.fechaoperacion) as Mesoperacion, sum(p.importebase) as TarifaPlena, sum(p.importedescuentos) as DescuentosAplicados, sum(p.importefinal) as ImporteFinal, count(p.id) as CantidadTickets 
+from pasajesoperaciones po 
+left join pasajes p on po.pasaje=p.id
+left join viajes v on v.Id = p.Viaje
+left join servicios s on s.Id = v.Servicio
+left join CategoriasServicios ca on ca.id = s.Categoria
+Where p.estado=0 and po.operacion=0  and po.FechaOperacion between '2021-07-01' and '2021-07-31 23:59'
+and p.tipopasaje not in (4,5,8,3)
+group by ca.nombre, YEAR(po.fechaoperacion),month(po.fechaoperacion) 
+order by sum(p.importefinal) desc
