@@ -74,7 +74,8 @@ inner join boleterias b on po.boleteria=b.id
 inner join g_Localidades lo on p.localidadorigen=lo.localidadid
 inner join g_localidades ld on p.localidaddestino=ld.localidadid
 inner join PasajesTipos pt on p.TipoPasaje=pt.id
-Where p.estado=0 and po.operacion=0  and po.FechaOperacion between '2021-09-01' and '2021-09-30 23:59'
+Where (p.estado = 0 OR p.estado = 3) and po.operacion = 0 and p.tipopasaje not in (4,5,8,3) and b.id = 46 
+and po.FechaOperacion between '2022-04-01' and '2022-04-30 23:59'
 group by b.nombre, YEAR(po.fechaoperacion),month(po.fechaoperacion) order by sum(p.importefinal) desc
 
 
